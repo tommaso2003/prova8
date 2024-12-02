@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Piattaforma Filtri Immagini</title>
+</head>
+<body>
+  <div class="search-bar">
+    <input type="text" id="searchBox" placeholder="Cerca una texture..." onkeyup="filterImages()">
+  </div>
+  <div class="container">
+    <script>
+      const images = [
+        { src: "behave.jpg", name: "Behave" },
+        { src: "fiorato.jpg", name: "Fiorato" },
+        { src: "fioratoprova2.jpg", name: "Fiorato prova" },
+        { src: "cactus.jpg", name: "Cactus" },
+        { src: "charro.jpg", name: "Charro" },
+        { src: "effettotessuto.jpg", name: "Effetto Tessuto" },
+        { src: "giglio.jpg", name: "Giglio" },
+        { src: "diamantino.jpg", name: "Diamantino" },
+        { src: "muro.jpg", name: "Muro" },
+        { src: "sassolino.jpg", name: "Sassolino" },
+        { src: "vuiton.jpg", name: "Vuiton" },
+        { src: "italianplank.jpg", name: "Italian Plank" },
+        { src: "piuma.jpg", name: "Piuma" },
+        { src: "sacco.jpg", name: "Sacco" },
+        { src: "image15.jpg", name: "Lago" },
+        { src: "image16.jpg", name: "Spiaggia" },
+        { src: "image17.jpg", name: "Colline" },
+        { src: "image18.jpg", name: "Pianura" },
+        { src: "image19.jpg", name: "Vulcano" },
+        { src: "image20.jpg", name: "Isola" },
+        { src: "image21.jpg", name: "Faro" },
+        { src: "image22.jpg", name: "Villaggio" },
+        { src: "image23.jpg", name: "Grattacieli" },
+        { src: "image24.jpg", name: "Fattoria" }
+      ];
+
+      const colors = [
+        { hex: "#8D897F", name: "Beige 201" },
+        { hex: "#552917", name: "Bordeaux 040" },
+        { hex: "#B29B6E", name: "Beige 0196" },
+        { hex: "#7A6138", name: "Beige 080" },
+        { hex: "#FFFFFF", name: "Bianco 001" },
+        { hex: "#2A251C", name: "Nero 32 ON" },
+        { hex: "#2F4845", name: "Verde 613" },
+        { hex: "#B6B1A4", name: "Beige 0173" },
+        { hex: "#909291", name: "Grigio 32 SG" },
+        { hex: "#D3D4D1", name: "Grigio chiaro 32 U" },
+        { hex: "#323535", name: "Grigio 620" },
+        { hex: "#5A5B5C", name: "Grigio scuro 32 TA" },
+        { hex: "#362C29", name: "Mokka 016" },
+        { hex: "#333331", name: "Grigio 476" }
+      ];
+
+      function generatePanels() {
+        const container = document.querySelector('.container');
+        images.forEach((image, index) => {
+          const panelId = `panel${index + 1}`;
+          const overlayId = `overlay-${panelId}`;
+          const panel = document.createElement('div');
+          panel.className = 'panel';
+          panel.dataset.name = image.name.toLowerCase();
+          panel.innerHTML = `
+            <h2>${image.name}</h2>
+            <div class="image-container">
+              <img id="${panelId}" src="images/${image.src}" alt="${image.name}">
+              <div class="overlay" id="${overlayId}"></div>
+            </div>
+            <div class="buttons">
+              ${colors.map((color) => `
+                <button style="background-color: ${color.hex}" onclick="applyColorOverlay('${panelId}', '${color.hex}', '${color.name}')">
+                </button>
+              `).join('')}
+            </div>
+            <div class="color-indicator" id="colorIndicator-${panelId}">
+              <span class="color-name">Nessun colore selezionato</span>
+            </div>
+          `;
+          container.appendChild(panel);
+        });
+      }
+
+      function applyColorOverlay(imageId, color, colorName) {
+        const overlay = document.getElementById(`overlay-${imageId}`);
+        const colorIndicator = document.getElementById(`colorIndicator-${imageId}`);
+        overlay.style.backgroundColor = color;
+        colorIndicator.querySelector('.color-name').textContent = colorName;
+        overlay.style.opacity = '0.90';
+      }
+
+      function resetOverlay(imageId) {
+        const overlay = document.getElementById(`overlay-${imageId}`);
+        const colorIndicator = document.getElementById(`colorIndicator-${imageId}`);
+        overlay.style.backgroundColor = 'transparent';
+        colorIndicator.querySelector('.color-name').textContent = 'Nessun colore selezionato';
+      }
+
+      function filterImages() {
+        const query = document.getElementById('searchBox').value.toLowerCase();
+        const panels = document.querySelectorAll('.panel');
+        panels.forEach(panel => {
+          const name = panel.dataset.name;
+          if (name.includes(query)) {
+            panel.style.display = 'block';
+          } else {
+            panel.style.display = 'none';
+          }
+        });
+      }
+
+      window.onload = generatePanels;
+    </script>
+  </div>
+</body>
+</html>
